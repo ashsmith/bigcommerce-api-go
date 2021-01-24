@@ -8,11 +8,11 @@ import (
 )
 
 type WebhooksService interface {
-	Get(int64, interface{}) (Webhook, error)
-	List(interface{}) ([]Webhook, error)
-	Create(Webhook, interface{}) (Webhook, error)
-	Update(Webhook, interface{}) (Webhook, error)
-	Delete(int64, interface{}) error
+	Get(int64, ...interface{}) (Webhook, error)
+	List(...interface{}) ([]Webhook, error)
+	Create(Webhook, ...interface{}) (Webhook, error)
+	Update(Webhook, ...interface{}) (Webhook, error)
+	Delete(int64, ...interface{}) error
 }
 
 type PaginationResult struct {
