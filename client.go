@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -17,7 +16,7 @@ type App struct {
 
 type Client struct {
 	app        App
-	HttpClient *http.Client
+	HTTPClient *http.Client
 	Webhooks   WebhooksService
 }
 
@@ -50,23 +49,23 @@ func (c *Client) newRequest(method, path string, body io.Reader) (*http.Request,
 	return req, nil
 }
 
-func (c *Client) DoRequest(method, path string, reqBody io.Reader) []byte {
+func (c *Client) DoRequest(method, path string, reqBody io.Reader) ([]byte, error) {
 	req, err := c.newRequest(method, path, reqBody)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	res, doErr := c.HttpClient.Do(req)
+	res, doErr := c.HTTPClient.Do(req)
 	if doErr != nil {
-		log.Fatal(doErr)
+		return nil, doErr
 	}
 
 	defer res.Body.Close()
 
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
-		log.Fatal(readErr)
+		return nil, readErr
 	}
 
-	return body
+	return body, nil
 }
