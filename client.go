@@ -16,15 +16,15 @@ type App struct {
 
 type Client struct {
 	app        App
-	HTTPClient *http.Client
+	HTTPClient http.Client
 	Webhooks   WebhooksService
 }
 
-func (a App) NewClient(httpClient *http.Client) *Client {
+func (a App) NewClient(httpClient http.Client) *Client {
 	return NewClient(a, httpClient)
 }
 
-func NewClient(app App, httpClient *http.Client) *Client {
+func NewClient(app App, httpClient http.Client) *Client {
 	c := &Client{
 		app: app,
 	}
