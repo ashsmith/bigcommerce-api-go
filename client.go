@@ -49,6 +49,7 @@ func (c *Client) newRequest(method, path string, body io.Reader) (*http.Request,
 	return req, nil
 }
 
+// DoRequest will create a request and return the response.
 func (c *Client) DoRequest(method, path string, reqBody io.Reader) ([]byte, error) {
 	req, err := c.newRequest(method, path, reqBody)
 	if err != nil {

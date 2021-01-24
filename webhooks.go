@@ -10,9 +10,9 @@ import (
 type WebhooksService interface {
 	Get(int64, interface{}) (Webhook, error)
 	List(interface{}) ([]Webhook, error)
-	Create(Webhook) (Webhook, error)
-	Update(Webhook) (Webhook, error)
-	Delete(int64) error
+	Create(Webhook, interface{}) (Webhook, error)
+	Update(Webhook, interface{}) (Webhook, error)
+	Delete(int64, interface{}) error
 }
 
 type PaginationResult struct {
@@ -52,7 +52,7 @@ type WebhooksServiceOp struct {
 }
 
 // Get will fetch a single webhook by the provided ID.
-func (s *WebhooksServiceOp) Get(id int64, options interface{}) (Webhook, error) {
+func (s *WebhooksServiceOp) Get(id int64, options ...interface{}) (Webhook, error) {
 	var webhookResponse GetWebhookResponse
 	body, reqErr := s.client.DoRequest(http.MethodGet, fmt.Sprintf("/v3/hooks/%d", id), nil)
 	if reqErr != nil {
@@ -66,7 +66,7 @@ func (s *WebhooksServiceOp) Get(id int64, options interface{}) (Webhook, error) 
 }
 
 // List will retrieve all webhooks
-func (s *WebhooksServiceOp) List(options interface{}) ([]Webhook, error) {
+func (s *WebhooksServiceOp) List(options ...interface{}) ([]Webhook, error) {
 	webhookListResponse := ListWebhookResponse{}
 	body, reqErr := s.client.DoRequest(http.MethodGet, "/v3/hooks", nil)
 	if reqErr != nil {
@@ -79,7 +79,9 @@ func (s *WebhooksServiceOp) List(options interface{}) ([]Webhook, error) {
 	return webhookListResponse.Data, nil
 }
 
-func (s *WebhooksServiceOp) Create(webhook Webhook) (Webhook, error) {
+// Create will create a new webhook.
+// The only fields required on a webhook are: Scope, Destination and IsActive
+func (s *WebhooksServiceOp) Create(webhook Webhook, options ...interface{}) (Webhook, error) {
 	var webhookResponse GetWebhookResponse
 	jsonBody, err := json.Marshal(webhook)
 	if err != nil {
@@ -100,7 +102,7 @@ func (s *WebhooksServiceOp) Create(webhook Webhook) (Webhook, error) {
 }
 
 // Update will update a single webhook.
-func (s *WebhooksServiceOp) Update(webhook Webhook) (Webhook, error) {
+func (s *WebhooksServiceOp) Update(webhook Webhook, options ...interface{}) (Webhook, error) {
 	var webhookResponse GetWebhookResponse
 	jsonBody, err := json.Marshal(webhook)
 	if err != nil {
@@ -121,7 +123,7 @@ func (s *WebhooksServiceOp) Update(webhook Webhook) (Webhook, error) {
 }
 
 // Delete will delete a webhook by the provided ID.
-func (s *WebhooksServiceOp) Delete(id int64) error {
+func (s *WebhooksServiceOp) Delete(id int64, options ...interface{}) error {
 	_, reqErr := s.client.DoRequest(http.MethodDelete, fmt.Sprintf("/v3/hooks/%d", id), nil)
 	if reqErr != nil {
 		return reqErr
