@@ -44,7 +44,7 @@ type Webhook struct {
 	Scope       string            `json:"scope"`
 	Destination string            `json:"destination"`
 	IsActive    bool              `json:"is_active"`
-	Headers     map[string]string `json:"headers,omitempty"`
+	Headers     map[string]string `json:"headers"`
 }
 
 type WebhooksServiceOp struct {
