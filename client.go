@@ -18,6 +18,7 @@ type Client struct {
 	app        App
 	HTTPClient http.Client
 	Webhooks   WebhooksService
+	Storefront StorefrontService
 }
 
 func (a App) NewClient(httpClient http.Client) *Client {
@@ -30,6 +31,14 @@ func NewClient(app App, httpClient http.Client) *Client {
 	}
 
 	c.Webhooks = &WebhooksServiceOp{client: c}
+
+	c.Storefront = StorefrontService{}
+	c.Storefront.Status = &StorefrontStatusOp{client: c}
+	c.Storefront.Seo = &StorefrontSeoSettingsOp{client: c}
+	c.Storefront.Security = &StorefrontSecuritySettingsOp{client: c}
+	c.Storefront.Search = &StorefrontSearchSettingsOp{client: c}
+	c.Storefront.Category = &StorefrontCategorySettingsOp{client: c}
+	c.Storefront.RobotsTxt = &StorefrontRobotsTxtSettingsOp{client: c}
 
 	return c
 }
