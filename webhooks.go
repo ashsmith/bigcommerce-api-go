@@ -15,14 +15,14 @@ type WebhooksService interface {
 	Delete(int64, ...interface{}) error
 }
 
-type PaginationResult struct {
+type WebhookPaginationResult struct {
 	Offset     int64 `json:"offset"`
 	Limit      int64 `json:"limit"`
 	TotalItems int64 `json:"total_items"`
 }
 
-type MetaResult struct {
-	Pagination PaginationResult `json:"pagination"`
+type WebhookMetaResult struct {
+	Pagination WebhookPaginationResult `json:"pagination"`
 }
 
 type GetWebhookResponse struct {
@@ -30,8 +30,8 @@ type GetWebhookResponse struct {
 }
 
 type ListWebhookResponse struct {
-	Data []Webhook  `json:"data"`
-	Meta MetaResult `json:"meta"`
+	Data []Webhook         `json:"data"`
+	Meta WebhookMetaResult `json:"meta"`
 }
 
 // Webhook structure.

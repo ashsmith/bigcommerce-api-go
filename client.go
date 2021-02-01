@@ -14,6 +14,7 @@ type App struct {
 	AccessToken string
 }
 
+// Client is a collection of services that interacts with the BigCommerce API.
 type Client struct {
 	app        App
 	HTTPClient http.Client
@@ -21,11 +22,31 @@ type Client struct {
 	Storefront StorefrontService
 }
 
-func (a App) NewClient(httpClient http.Client) *Client {
-	return NewClient(a, httpClient)
+type Links struct {
+	Previous string `json:"previous,omitempty"`
+	Next     string `json:"next,omitempty"`
+	Current  string `json:"current,omitempty"`
 }
 
-func NewClient(app App, httpClient http.Client) *Client {
+type PaginationResult struct {
+	Total       int64 `json:"total,omitempty"`
+	Count       int64 `json:"count,omitempty"`
+	PerPage     int64 `json:"per_page,omitempty"`
+	CurrentPage int64 `json:"current_page,omitempty"`
+	Totalpages  int64 `json:"total_pages,omitempty`
+	Links       Links `json:"links,omitempty"`
+}
+
+type MetaResult struct {
+	Pagination PaginationResult `json:"pagination,omitempty"`
+}
+
+// NewClient will create a new client instance for interacting with the BigCommerce API.
+func (a App) NewClient(httpClient http.Client) *Client {
+	return client(a, httpClient)
+}
+
+func client(app App, httpClient http.Client) *Client {
 	c := &Client{
 		app: app,
 	}
@@ -75,6 +96,10 @@ func (c *Client) DoRequest(method, path string, reqBody io.Reader) ([]byte, erro
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
 		return nil, readErr
+	}
+
+	if res.StatusCode >= 300 {
+		return nil, fmt.Errorf("Received non-2xx status\nstatus code: %d\nbody: %s", res.StatusCode, string(body))
 	}
 
 	return body, nil
